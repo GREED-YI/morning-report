@@ -16,6 +16,7 @@ import json
 import sys
 import traceback
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 import assemble
 import capture
@@ -27,6 +28,11 @@ import send
 import summarize
 
 KST = timezone(timedelta(hours=9))
+
+# 발송에 실패했을 때 남기는 표시 파일. 만들기는 성공했으니 페이지는 그대로
+# 올리고, 워크플로 마지막에 이 파일을 보고 실행을 빨간불로 돌린다.
+# 이게 없으면 카톡이 안 와도 GitHub 는 초록불이라 며칠씩 모르고 지나간다.
+SEND_FAILED = Path(__file__).parent / "SEND_FAILED"
 
 
 def is_holiday():
@@ -50,6 +56,7 @@ def is_holiday():
 def main():
     force = "--force" in sys.argv
     started = datetime.now(KST)
+    SEND_FAILED.unlink(missing_ok=True)
     print(f"모닝 리포트 생성 시작  {started:%Y-%m-%d %H:%M} KST")
 
     holiday, reason = is_holiday()
@@ -109,9 +116,11 @@ def main():
         try:
             send.send(report)
         except SystemExit as e:
-            # 토큰이 없거나 만료된 경우. 만든 결과는 살아 있으므로 실패로 보지 않는다.
+            # 토큰이 없거나 만료된 경우. 만든 결과는 살아 있으므로 여기서 멈추지는
+            # 않는다. 다만 표시를 남겨서 워크플로가 빨간불로 끝나게 한다.
             print(f"  발송 실패: {e}")
             print("  step1_auth.py 로 다시 로그인한 뒤 --no-send 없이 실행하세요.")
+            SEND_FAILED.write_text(str(e), encoding="utf-8")
 
     took = (datetime.now(KST) - started).total_seconds()
     print(f"\n완료 ({took:.0f}초)")
