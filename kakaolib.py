@@ -24,8 +24,11 @@ def load_env():
             "  카카오 REST API 키를 채운 뒤 다시 실행하세요."
         )
     env = {}
-    for line in ENV_PATH.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
+    # utf-8-sig 로 읽으면 메모장 같은 편집기가 파일 앞에 붙이는 BOM 이 걷힌다.
+    for line in ENV_PATH.read_text(encoding="utf-8-sig").splitlines():
+        # 값 안에 섞여 들어온 BOM 도 지운다. 눈에 안 보이는데 HTTP 헤더에 실리면
+        # latin-1 인코딩 오류로 요청이 통째로 실패한다. 실제로 겪은 사고다.
+        line = line.replace("﻿", "").strip()
         if not line or line.startswith("#") or "=" not in line:
             continue
         key, value = line.split("=", 1)
