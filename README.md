@@ -2,104 +2,174 @@
 
 평일 아침 7시, 가족 카카오톡으로 관심 종목 브리핑 카드뉴스를 보낸다.
 
-- 기획서: https://claude.ai/code/artifact/3954d64f-7673-4c80-8e61-1e90ca5c873e
-- 디자인 프로토타입: https://claude.ai/code/artifact/ae0c52fc-d893-4fa3-bb62-88033f3a6518
-- 카카오 앱: finance_report_project (앱 ID 1573509)
-- 제작: SH.YI
-
-지금은 **0단계**다. 목표는 하나. 카카오톡 "나와의 채팅"으로 메시지를 보냈을 때
-휴대폰 푸시 알림이 실제로 울리는지 확인하는 것. 울리면 계획대로 가고, 안 울리면 방식을 바꾼다.
+제작 SH.YI · 카카오 앱 `finance_report_project` (앱 ID 1573509)
 
 ---
 
-## 0단계 실행 방법
+## 어떻게 돌아가나
 
-### 준비 1. 카카오 개발자 사이트 설정 — 완료됨
+```
+run.py
+ ├ 1 수집   야후 파이낸스에서 시세, 구글 뉴스 RSS 에서 기사 제목
+ ├ 2 요약   Gemini 또는 Claude 가 카드에 들어갈 문장을 쓴다
+ ├ 3 조립   숫자와 문장을 합쳐 카드 14장을 만든다
+ ├ 4 렌더   카드뉴스 웹페이지와 카톡용 800x800 PNG
+ └ 5 발송   카카오톡 나에게 보내기
+```
 
-2026년 9월 10일에 아래 네 가지를 모두 설정했다. 다시 할 필요 없다.
+카드 구성은 이렇다.
 
-| 항목 | 설정값 | 위치 |
+| 묶음 | 카드 |
+|---|---|
+| 시장 전체 | 커버 · 밤새 지표 · 거시 이슈 2장 · 오늘 일정 |
+| 종목별 (구독 종목마다) | 헤드라인 · 뉴스 2장 · 최근 닷새 흐름 |
+| 마무리 | 오늘 체크 3가지 |
+
+### 설계에서 지킨 두 가지
+
+**숫자는 AI 가 만들지 않는다.** 종가, 등락률, 지표 값은 시세 API 가 가져온 것을
+그대로 쓴다. 모델은 문장만 쓴다. 없는 수치를 지어낼 방법이 없다.
+
+**기사 주소도 AI 가 쓰지 않는다.** 기사에 번호를 붙여 보여주고 번호만 고르게 한다.
+코드가 그 번호를 실제 주소로 바꾼다. 가짜 링크가 생길 수 없다.
+
+---
+
+## 실행
+
+```bash
+python run.py              # 평소. 만들고 카톡으로 보낸다
+python run.py --no-send    # 만들기만
+python run.py --reuse      # 지난번 문장을 다시 써서 모델을 안 부른다
+python run.py --force      # 휴장일에도 강제로
+python demo.py             # 미리 적어둔 문장으로 디자인만 확인 (API 안 씀)
+```
+
+휴장일에는 알아서 건너뛴다. 주말은 확실하고, 공휴일은 최근 종가 날짜로 짐작한다.
+
+---
+
+## 설정
+
+### `config.py`
+
+| 항목 | 뜻 |
+|---|---|
+| `STOCKS` | 종목 코드, 이름, 야후 티커, 뉴스 검색어 |
+| `SUBSCRIBERS` | 누가 어떤 종목을 받을지 |
+| `MARKET_INDICATORS` | 밤새 지표 카드에 넣을 값들 |
+| `MACRO_KEYWORDS` | 거시 뉴스를 찾을 검색어 |
+| `PROVIDER` | `"gemini"`(무료) 또는 `"claude"`(유료) |
+| `SITE_URL` | 카드뉴스가 올라간 주소. 비면 카톡에 글자만 간다 |
+
+### `.env`
+
+`.env.example` 을 복사해서 채운다. 절대 공유하지 않는다.
+
+| 키 | 발급처 | 필요도 |
 |---|---|---|
-| 카카오 로그인 | 활성화 ON | 카카오 로그인 > 일반 |
-| 로그인 리다이렉트 URI | `http://localhost:5000/oauth` | 앱 > 플랫폼 키 > REST API 키 > 수정 |
-| 클라이언트 시크릿 | 활성화 ON (키 발급 시 기본값) | 같은 화면 아래쪽 |
-| 동의항목 | 카카오톡 메시지 전송 선택 동의, 닉네임 선택 동의 | 카카오 로그인 > 동의항목 |
+| `KAKAO_REST_API_KEY` | 카카오 개발자 > 플랫폼 키 > REST API 키 > 수정 | 필수 |
+| `KAKAO_CLIENT_SECRET` | 같은 화면 아래쪽 | 필수 |
+| `GEMINI_API_KEY` | aistudio.google.com/apikey | 필수 (무료) |
+| `ANTHROPIC_API_KEY` | console.anthropic.com | Claude 로 바꿀 때만 |
+| `PIXABAY_API_KEY` | pixabay.com/api/docs | 사진 창고 만들 때만 |
 
-카카오톡 메시지 전송은 정책상 필수 동의로 설정할 수 없고 선택 동의가 최대다.
-우리 코드가 로그인 주소에 `scope=talk_message` 를 명시하므로 동의 화면에는 항상 나타난다.
-
-> 콘솔 화면 구조가 2025년 12월 3일에 개편됐다. 인터넷의 옛날 설명글은
-> "앱 설정 > 플랫폼"에서 Redirect URI를 등록하라고 하는데, 지금은 그 메뉴가 없다.
-> 리다이렉트 URI와 웹 도메인은 모두 **앱 키 하위**로 옮겨졌다.
-
-### 준비 2. 키 넣기 — 여기부터 직접
-
-`.env` 파일을 메모장으로 열어서 두 줄을 채운다. 두 값 모두 같은 화면에 있다.
-
-카카오 개발자 사이트 > finance_report_project > **앱 > 플랫폼 키**
-> REST API 키 카드의 **점 3개 > 수정**
-
-```
-KAKAO_REST_API_KEY=화면 맨 위의 "REST API 키"
-KAKAO_CLIENT_SECRET=아래쪽 "클라이언트 시크릿" > 카카오 로그인 행의 "코드"
-```
-
-- JavaScript 키나 네이티브 앱 키가 아니라 **REST API 키**다.
-- 이 앱은 클라이언트 시크릿이 켜져 있으므로 **두 값 모두 필요하다**. 하나라도 비면 로그인이 실패한다.
-- 이 파일은 절대 남에게 보내거나 채팅에 붙여넣지 않는다. 깃에도 올라가지 않게 설정돼 있다.
-
-### 실행
-
-**터미널을 새로 열어야 한다.** 파이썬을 방금 설치해서, 이미 열려 있던 창은 위치를 모른다.
-
-```bash
-cd /d D:\finance_project
-python step1_auth.py
-```
-
-브라우저가 열리면 **동의하고 계속하기** 를 누른다. 토큰은 `.env` 에 자동 저장된다.
-
-```bash
-python step2_send.py
-```
-
-휴대폰을 확인한다. 알림이 울리고 "나와의 채팅"에 메시지가 있으면 0단계 통과다.
+토큰 세 줄은 `step1_auth.py` 가 자동으로 채운다.
 
 ---
 
-## 파일 설명
+## 배경 사진
+
+주제별로 미리 골라 둔 사진을 `assets/library/` 에 두고 거기서 꺼낸다.
+카드는 주제 이름만 고르고, 날짜와 카드 번호를 섞어 돌려 쓰므로
+날마다 다른 그림이 나온다. **운영 중에는 인터넷도 API 키도 쓰지 않는다.**
+
+주제 14개: `oil` `centralbank` `geopolitics` `semiconductor` `datacenter`
+`trading` `exchange` `currency` `seoul` `factory` `electronics` `schedule`
+`sunrise` `checklist`
+
+마음에 안 드는 주제만 다시 받으려면:
+
+```bash
+python build_photo_library.py --only exchange,electronics
+python build_photo_library.py --sheet     # 눈으로 확인할 대조표
+```
+
+매일 검색해서 쓰는 방식은 접었다. '반도체 클린룸' 에 거실 사진이,
+'월스트리트' 에 스페인 도로표지판이, '실리콘 웨이퍼' 에 바나나 디저트가 왔다.
+
+---
+
+## 자동 실행 (GitHub Actions)
+
+`.github/workflows/morning.yml` 이 평일 06:45 KST 에 돈다.
+GitHub 예약은 5~15분 늦는 일이 흔해서 7시보다 당겨 두었다.
+
+### 저장소에 넣어야 할 Secrets
+
+`Settings > Secrets and variables > Actions`
+
+| 이름 | 값 |
+|---|---|
+| `KAKAO_REST_API_KEY` | `.env` 와 같은 값 |
+| `KAKAO_CLIENT_SECRET` | `.env` 와 같은 값 |
+| `KAKAO_REFRESH_TOKEN` | `.env` 와 같은 값 |
+| `GEMINI_API_KEY` | `.env` 와 같은 값 |
+| `SECRETS_PAT` | 아래 설명 |
+
+`SECRETS_PAT` 는 카카오 토큰이 갱신됐을 때 그 값을 다시 저장하기 위한 것이다.
+없으면 두 달쯤 뒤에 발송이 조용히 멈춘다. GitHub 의 fine-grained 토큰으로
+**이 저장소 하나에만, Secrets 쓰기 권한만** 주어 만든다.
+
+### Pages 설정
+
+`Settings > Pages > Source` 를 **GitHub Actions** 로 바꾼다.
+첫 배포가 끝나면 나오는 주소를 두 곳에 넣는다.
+
+1. `config.py` 의 `SITE_URL`
+2. 카카오 개발자 콘솔 `앱 > 제품 링크 관리 > 웹 도메인`
+   (등록하지 않으면 카톡 메시지의 버튼이 동작하지 않는다)
+
+---
+
+## 파일
 
 | 파일 | 역할 |
 |---|---|
-| `step1_auth.py` | 카카오 로그인. 브라우저를 열어 동의를 받고 토큰을 `.env` 에 저장한다 |
-| `step2_send.py` | 테스트 메시지 발송 |
-| `kakaolib.py` | 두 스크립트가 함께 쓰는 카카오 API 함수 모음 |
-| `.env` | API 키와 토큰. 내 컴퓨터에만 있고 공유하지 않는다 |
-| `.env.example` | `.env` 의 서식 견본. 이건 공유해도 된다 |
-
-설치할 패키지는 없다. 파이썬 기본 기능만 쓴다.
+| `run.py` | 전체를 순서대로 실행 |
+| `config.py` | 종목·지표·모델 설정 |
+| `collect_market.py` | 시세 수집 (야후 파이낸스) |
+| `collect_news.py` | 뉴스 제목 수집 (구글 뉴스 RSS) |
+| `summarize.py` | 프롬프트와 출력 형식. 카드 문장 생성 |
+| `providers.py` | Gemini / Claude 중 어느 것을 쓸지 |
+| `assemble.py` | 숫자와 문장을 합쳐 카드 목록으로 |
+| `render.py` | 카드뉴스 HTML |
+| `capture.py` | 카드를 PNG 로 촬영 |
+| `photos.py` | 사진 창고에서 꺼내기 |
+| `send.py` | 카카오톡 발송 |
+| `demo.py` | API 없이 디자인 확인 |
+| `build_photo_library.py` | 사진 창고 만들기 (한 번만) |
+| `step1_auth.py` `step2_send.py` | 카카오 로그인과 발송 시험 |
 
 ---
 
 ## 문제가 생기면
 
-| 증상 | 원인과 해결 |
+| 증상 | 해결 |
 |---|---|
-| `python` 을 못 찾는다 | 터미널을 껐다가 새로 연다 |
-| `KOE006` | 리다이렉트 URI 불일치. 콘솔에 `http://localhost:5000/oauth` 가 정확히 등록돼 있는지 확인 |
-| `KOE101` | REST API 키가 틀렸다. JavaScript 키를 넣지 않았는지 확인 |
-| `invalid_client` | 클라이언트 시크릿이 비었거나 틀렸다 |
-| 5000번 포트가 사용 중 | 다른 프로그램이 쓰고 있다. 그 프로그램을 끄거나 알려달라. 포트를 바꾸겠다 |
-| 발송은 성공인데 알림이 없다 | 휴대폰 카카오톡 알림 설정 확인. 그래도 없으면 알려달라. 플랜 B로 바꾼다 |
+| `python` 을 못 찾음 | 터미널을 새로 연다 |
+| Gemini `503` / `429` | 알아서 세 번까지 다시 시도한다. 계속 실패하면 `config.GEMINI_MODEL` 을 더 가벼운 모델로 |
+| Gemini 무료 한도 초과 | 하루 한도가 있다. `gemini-3.5-flash-lite` 로 낮추거나 다음 날 |
+| 카톡 발송 실패 | 토큰 만료. `python step1_auth.py` 로 다시 로그인 |
+| 카톡 버튼이 안 눌림 | 카카오 콘솔 웹 도메인에 `SITE_URL` 을 등록했는지 확인 |
+| 카드 내용이 이상함 | `out/texts.json` 에 모델이 쓴 원본이 남아 있다. 프롬프트 문제인지 렌더링 문제인지 여기서 갈린다 |
+| 사진이 주제와 안 맞음 | `build_photo_library.py --only <주제>` 로 그 주제만 다시 받는다 |
 
 ---
 
-## 다음 단계
+## 아직 안 한 것
 
-0단계를 통과하면 1단계로 간다.
-
-1. 뉴스 수집 (Google News RSS) 과 시세 수집 (pykrx, Yahoo Finance)
-2. Claude 로 카드 문장 생성
-3. 카드뉴스 HTML 생성과 대표 이미지 캡처
-4. GitHub Pages 배포. **이때 그 주소를 카카오 콘솔의 웹 도메인에 등록해야** 메시지 버튼이 동작한다
-5. 매일 아침 7시 자동 실행
+- 가족 온보딩 (사람마다 로그인, 사람별 종목 구독)
+- 종목 선택 웹페이지
+- DART 공시·실적 일정 카드
+- 외국인·기관 수급 (야후에 없어서 뺐다. 공공데이터포털을 붙이면 된다)
