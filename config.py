@@ -67,10 +67,11 @@ PROVIDER = "gemini"
 
 # aistudio.google.com/apikey 에서 무료 키를 받아 .env 의 GEMINI_API_KEY 에 넣는다.
 # 한도에 걸리면 gemini-3.5-flash-lite 처럼 더 가벼운 모델로 낮추면 된다.
-GEMINI_MODEL = "gemini-3.5-flash"
+GEMINI_MODEL = "gemini-3.6-flash"
 
-# 기본 모델이 계속 붐빌 때 대신 부를 모델. 비우면 그냥 실패한다.
-GEMINI_FALLBACK_MODEL = "gemini-2.5-flash"
+# 기본 모델이 계속 붐비거나 한도에 걸릴 때 대신 부를 모델.
+# 무료 한도는 모델마다 따로 계산되므로 예비 모델을 다른 계열로 두는 게 낫다.
+GEMINI_FALLBACK_MODEL = "gemini-3.5-flash-lite"
 
 # console.anthropic.com 에서 키를 받아 .env 의 ANTHROPIC_API_KEY 에 넣는다.
 CLAUDE_MODEL = "claude-opus-5"
