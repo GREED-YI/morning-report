@@ -1,0 +1,15 @@
+# 토큰과 API 키. 절대 커밋하지 않는다.
+.env
+*.token
+
+# 파이썬
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 생성물
+out/
+
+# 예전 방식의 사진 캐시 (지금은 안 씀)
+photo_cache/

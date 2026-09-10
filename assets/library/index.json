@@ -1,0 +1,310 @@
+{
+  "oil": [
+    {
+      "file": "1.jpg",
+      "query": "oil refinery night",
+      "tags": "port arthur, texas, night, evening, industry, refinery, oil, architect"
+    },
+    {
+      "file": "2.jpg",
+      "query": "oil refinery night",
+      "tags": "refinery, oil refinery, oil, industry, mineral oil, refinery, refinery"
+    },
+    {
+      "file": "3.jpg",
+      "query": "oil refinery night",
+      "tags": "refinery, oil refinery, oil, industry, nature, ship, sea"
+    },
+    {
+      "file": "4.jpg",
+      "query": "oil refinery night",
+      "tags": "refinery, oil refinery, oil, industry, mineral oil, refinery, refinery"
+    }
+  ],
+  "centralbank": [
+    {
+      "file": "1.jpg",
+      "query": "capitol washington building",
+      "tags": "united states capitol, washington, building, landmark, capitol buildin"
+    },
+    {
+      "file": "2.jpg",
+      "query": "capitol washington building",
+      "tags": "capitol, building, government building, houses of parliament, washingt"
+    },
+    {
+      "file": "3.jpg",
+      "query": "capitol washington building",
+      "tags": "washington, library, architecture, historical, dc, building, governmen"
+    },
+    {
+      "file": "4.jpg",
+      "query": "capitol washington building",
+      "tags": "us capitol, government, washington dc, monument, national, architectur"
+    }
+  ],
+  "geopolitics": [
+    {
+      "file": "1.jpg",
+      "query": "cargo ship sea",
+      "tags": "ship, cranes, loading, dock, port, pier, machinery, heavy machinery, c"
+    },
+    {
+      "file": "2.jpg",
+      "query": "cargo ship sea",
+      "tags": "ship, nature, sea, water, sight, transport, cargo ship, tanker, oil, m"
+    },
+    {
+      "file": "3.jpg",
+      "query": "cargo ship sea",
+      "tags": "sunset, port, ship, nature, crane, logistics, industry, sky, water, la"
+    },
+    {
+      "file": "4.jpg",
+      "query": "cargo ship sea",
+      "tags": "ships, ocean, sea, vessels, nature, container ships, cargo ships, tran"
+    }
+  ],
+  "semiconductor": [
+    {
+      "file": "1.jpg",
+      "query": "semiconductor chip",
+      "tags": "cpu, chip, semiconductor, condenser, silicon, semiconductor, semicondu"
+    },
+    {
+      "file": "2.jpg",
+      "query": "semiconductor chip",
+      "tags": "storage, storage medium, hard drive, hdd, technology, digital, compute"
+    },
+    {
+      "file": "3.jpg",
+      "query": "semiconductor chip",
+      "tags": "capacitors, computer, circuit board, technology, electronics, semicond"
+    },
+    {
+      "file": "4.jpg",
+      "query": "semiconductor chip",
+      "tags": "electronics, pcb, processor, circuit, electronic, computer, motherboar"
+    }
+  ],
+  "datacenter": [
+    {
+      "file": "1.jpg",
+      "query": "data center server",
+      "tags": "source, code, software, computer, programming language, data center, p"
+    },
+    {
+      "file": "2.jpg",
+      "query": "data center server",
+      "tags": "server, technology, web, data, internet, network, computer, digital, c"
+    },
+    {
+      "file": "3.jpg",
+      "query": "data center server",
+      "tags": "sever, digitization, mainframe, computer, digital, binary, cable, netw"
+    },
+    {
+      "file": "4.jpg",
+      "query": "data center server",
+      "tags": "data center, cable, information, technology, technician, server, syste"
+    }
+  ],
+  "trading": [
+    {
+      "file": "1.jpg",
+      "query": "stock market chart",
+      "tags": "blur, chart, computer, data, finance, graph, growth, line graph, stock"
+    },
+    {
+      "file": "2.jpg",
+      "query": "stock market chart",
+      "tags": "stock, trading, monitor, business, finance, exchange, investment, mark"
+    },
+    {
+      "file": "3.jpg",
+      "query": "stock market chart",
+      "tags": "gamestop, stock, chart, gme, wallstreetbets, graph, finance, trading, "
+    },
+    {
+      "file": "4.jpg",
+      "query": "stock market chart",
+      "tags": "gamestop, stock, chart, gme, wallstreetbets, graph, finance, trading, "
+    }
+  ],
+  "exchange": [
+    {
+      "file": "1.jpg",
+      "query": "new york stock exchange",
+      "tags": "new york, stock exchange, money, stock exchange, stock exchange, stock"
+    },
+    {
+      "file": "2.jpg",
+      "query": "new york stock exchange",
+      "tags": "wall street, new york, stock exchange, city, urban, stock exchange, st"
+    },
+    {
+      "file": "3.jpg",
+      "query": "new york stock exchange",
+      "tags": "new york stock exchange, wall street, new york city, new, street, stoc"
+    },
+    {
+      "file": "4.jpg",
+      "query": "new york stock exchange",
+      "tags": "stock market, new york, finance, money, market, business, nyc, manhatt"
+    }
+  ],
+  "currency": [
+    {
+      "file": "1.jpg",
+      "query": "dollar banknotes",
+      "tags": "banknotes, dollar, money, wealth, finance, currency, business, cash, b"
+    },
+    {
+      "file": "2.jpg",
+      "query": "korean won money",
+      "tags": "money, mad money, korean money, won, south korean won, cash, bills, cu"
+    },
+    {
+      "file": "3.jpg",
+      "query": "korean won money",
+      "tags": "money, don, 5000 won, five thousand won, korean money, korea, republic"
+    },
+    {
+      "file": "4.jpg",
+      "query": "korean won money",
+      "tags": "money, don, 10, 000 won, ten thousand won, korean money, korea, republ"
+    }
+  ],
+  "seoul": [
+    {
+      "file": "1.jpg",
+      "query": "seoul night",
+      "tags": "night view, bridge, river, building, road, gloominess, night, seoul, k"
+    },
+    {
+      "file": "2.jpg",
+      "query": "seoul night",
+      "tags": "city, building, architecture, urban, seoul, republic of korea, night v"
+    },
+    {
+      "file": "3.jpg",
+      "query": "seoul night",
+      "tags": "han river, night view, seoul, korea, bridge, night, seoul night view, "
+    },
+    {
+      "file": "4.jpg",
+      "query": "seoul night",
+      "tags": "night view, dark, seoul, korea, republic of korea, city, namsan tower,"
+    }
+  ],
+  "factory": [
+    {
+      "file": "1.jpg",
+      "query": "factory production line",
+      "tags": "company, factory, production, machine production line, the production "
+    },
+    {
+      "file": "2.jpg",
+      "query": "factory production line",
+      "tags": "production, company, factory, machine production line, the production "
+    },
+    {
+      "file": "3.jpg",
+      "query": "factory production line",
+      "tags": "brewery, tey, vats, vat, silo, the tank, tanks, fermentation, beer, pr"
+    },
+    {
+      "file": "4.jpg",
+      "query": "factory production line",
+      "tags": "electricity, energy, industry, factory, energetics, power lines, wire,"
+    }
+  ],
+  "electronics": [
+    {
+      "file": "1.jpg",
+      "query": "computer motherboard",
+      "tags": "computer, processor, hardware, motherboard, motherboard, motherboard, "
+    },
+    {
+      "file": "2.jpg",
+      "query": "computer motherboard",
+      "tags": "motherboard, computer, electronics, motherboard, motherboard, motherbo"
+    },
+    {
+      "file": "3.jpg",
+      "query": "computer motherboard",
+      "tags": "computer, cpu, computer fan, motherboard, processor, chip, pc, electro"
+    },
+    {
+      "file": "4.jpg",
+      "query": "computer motherboard",
+      "tags": "motherboard, computer, plate, processor, chipset, technology, pc, tech"
+    }
+  ],
+  "schedule": [
+    {
+      "file": "1.jpg",
+      "query": "calendar desk",
+      "tags": "new year background, organizer, calendar, schedule, appointments, diar"
+    },
+    {
+      "file": "2.jpg",
+      "query": "calendar desk",
+      "tags": "planner, flower wallpaper, march, calendar, schedule, desktop backgrou"
+    },
+    {
+      "file": "3.jpg",
+      "query": "calendar desk",
+      "tags": "apple, calendar, desk, ipad, tablet, device, electronics, keyboard, mo"
+    },
+    {
+      "file": "4.jpg",
+      "query": "calendar desk",
+      "tags": "dairy, calendar, school, purposes, desk, office, job, entrepreneurs, u"
+    }
+  ],
+  "sunrise": [
+    {
+      "file": "1.jpg",
+      "query": "sunrise city",
+      "tags": "morning, dawn, nature, landscape, sunrise, reflection, city, dresden"
+    },
+    {
+      "file": "2.jpg",
+      "query": "sunrise city",
+      "tags": "city, buildings, sunrise, skyline, nature, water, twilight, cityscape,"
+    },
+    {
+      "file": "3.jpg",
+      "query": "sunrise city",
+      "tags": "city, buildings, dawn, panorama, nature, fog, old town, town, historic"
+    },
+    {
+      "file": "4.jpg",
+      "query": "sunrise city",
+      "tags": "seoul, city, landscape, architecture, korea, sunrise, view, dawn, lott"
+    }
+  ],
+  "checklist": [
+    {
+      "file": "1.jpg",
+      "query": "checklist notebook pen",
+      "tags": "checklist, paper, notebook, watch, pen, writing, information, checklis"
+    },
+    {
+      "file": "2.jpg",
+      "query": "checklist notebook pen",
+      "tags": "to do, list, checklist, notepad, notebook, pen, writing, business, wor"
+    },
+    {
+      "file": "3.jpg",
+      "query": "checklist notebook pen",
+      "tags": "checklist, goals, box, notebook, pen, people, man, hand, to do, busine"
+    },
+    {
+      "file": "4.jpg",
+      "query": "checklist notebook pen",
+      "tags": "fountain pen, note, notebook, page, paper, pen, spiral notebook, write"
+    }
+  ]
+}

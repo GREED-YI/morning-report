@@ -1,0 +1,4 @@
+yfinance>=0.2
+playwright>=1.40
+Pillow>=10
+anthropic>=1.0
