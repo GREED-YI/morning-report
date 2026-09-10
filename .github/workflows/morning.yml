@@ -32,6 +32,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    outputs:
+      send_failed: ${{ steps.send.outputs.failed }}
+      send_reason: ${{ steps.send.outputs.reason }}
 
     steps:
       - uses: actions/checkout@v4
@@ -100,6 +103,21 @@ jobs:
         with:
           path: out
 
+      # 카톡이 안 갔는지 여기서 확인만 하고 넘긴다. 여기서 바로 실패시키면
+      # 뒤따르는 deploy 가 건너뛰어져 페이지까지 같이 죽는다.
+      - name: 발송 결과 확인
+        id: send
+        run: |
+          if [ -f SEND_FAILED ]; then
+            echo "failed=true" >> "$GITHUB_OUTPUT"
+            echo "reason<<EOF" >> "$GITHUB_OUTPUT"
+            cat SEND_FAILED >> "$GITHUB_OUTPUT"
+            echo "" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+          else
+            echo "failed=false" >> "$GITHUB_OUTPUT"
+          fi
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -109,3 +127,24 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # 만들기는 됐는데 카톡만 안 간 경우를 빨간불로 남긴다.
+  # 조용히 초록불로 끝나면 리포트가 안 와도 며칠씩 모른다.
+  # 페이지 배포와 나란히 돌기 때문에 이 잡이 실패해도 페이지는 올라간다.
+  send-check:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: 발송 실패 알리기
+        if: needs.build.outputs.send_failed == 'true'
+        # 실패 사유는 카카오 서버가 보낸 글이다. run 안에 그대로 펼치면
+        # 따옴표 같은 글자가 명령으로 섞일 수 있어 환경 변수로 넘긴다.
+        env:
+          REASON: ${{ needs.build.outputs.send_reason }}
+        run: |
+          echo "::error::카톡 발송에 실패했습니다. 페이지는 올라갔습니다."
+          echo "$REASON"
+          echo
+          echo "카카오 토큰이 만료됐을 가능성이 큽니다."
+          echo "step1_auth.py 로 다시 로그인한 뒤 KAKAO_REFRESH_TOKEN 시크릿을 갱신하세요."
+          exit 1
