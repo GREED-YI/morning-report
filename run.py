@@ -78,8 +78,11 @@ def main():
         try:
             texts = summarize.build_texts(codes, overnight, stocks)
         except providers.ProviderError as e:
-            print(f"\n실패: {e}")
-            return 1
+            # 요약이 실패했다고 그날 브리핑을 통째로 거르지는 않는다.
+            # 시세는 이미 받아 두었으므로 숫자만이라도 보낸다.
+            print(f"\n  요약 실패: {e}")
+            print("  숫자만 담은 축소판으로 대신합니다.")
+            texts = summarize.plain_texts(codes, overnight, stocks)
 
         # 모델이 뭘 썼는지 나중에 들여다볼 수 있게 남겨 둔다.
         # 카드가 이상하게 나왔을 때 프롬프트 문제인지 렌더링 문제인지 여기서 갈린다.

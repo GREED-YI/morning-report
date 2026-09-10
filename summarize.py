@@ -264,6 +264,61 @@ def stock(code, data, articles, market_headline):
 
 # ── 한꺼번에 ────────────────────────────────────────────────────
 
+def plain_texts(codes, overnight, stocks):
+    """모델을 못 부를 때 쓰는 최소한의 브리핑.
+
+    한도 초과나 서버 과부하로 요약이 실패하면 그날 브리핑이 통째로 사라진다.
+    그것보다는 숫자만이라도 가는 편이 낫다. 여기서는 AI 를 부르지 않고
+    가지고 있는 시세만으로 카드를 채운다. 해설이 없으므로 그 사실을 밝힌다.
+    """
+    def arrow(pct):
+        return "올랐다" if pct > 0 else ("내렸다" if pct < 0 else "보합")
+
+    lead = overnight[0] if overnight else None
+    cover = (
+        f"밤새 {lead['label']}<br>{lead['value']}" if lead else "오늘의 시장 지표"
+    )
+
+    return {
+        "cover": {"headline": cover, "photo": "exchange"},
+        "overnight_headline": "밤새 해외 시장<br>주요 지표",
+        "overnight_photo": "trading",
+        "macro": [],
+        "schedule": {
+            "headline": "오늘 일정",
+            "photo": "schedule",
+            "items": [{"time": "09:00", "text": "국내 증시 개장"}],
+            "note": "",
+        },
+        "stocks": {
+            code: {
+                "cover_headline": f"전 거래일 대비<br>[[{arrow(stocks[code]['change_pct'])}]]",
+                "cover_photo": "semiconductor",
+                "news": [{
+                    "headline": "오늘은 뉴스 요약을<br>만들지 못했다",
+                    "photo": "checklist",
+                    "why": "요약을 맡은 AI 서비스가 응답하지 않았다. 시세는 정상이며 "
+                           "뉴스 요약만 빠졌다. 내일 아침에는 평소대로 나온다.",
+                    "link": "",
+                }],
+                "trend_headline": "최근 닷새<br>주가 흐름",
+                "trend_photo": "seoul",
+                "trend_note": "",
+            }
+            for code in codes
+        },
+        "closing": {
+            "headline": "오늘 체크",
+            "photo": "sunrise",
+            "items": [
+                "위 지표는 정상이지만 뉴스 요약은 빠져 있다",
+                "09시 개장 후 흐름을 직접 확인할 것",
+                "내일 아침에는 평소대로 요약이 들어간다",
+            ],
+        },
+    }
+
+
 def build_texts(codes, overnight, stocks):
     """카드에 들어갈 문장을 모두 만들어 assemble 이 쓰는 모양으로 돌려준다."""
     print(f"카드 문장 생성 중 ({providers.describe()})")
